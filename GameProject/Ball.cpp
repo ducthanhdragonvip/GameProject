@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Tile.h"
 #include "Hole.h"
+#include "Sand.h"
 #include<iostream>
 #include<SDL_mixer.h>
 #include<SDL_ttf.h>
@@ -10,7 +11,6 @@
 Ball::Ball(Vector2f p_pos, SDL_Texture* p_tex, SDL_Texture* p_pointTex, SDL_Texture* p_powerFG, SDL_Texture* p_powerBG)
 :Entity(p_pos, p_tex)
 {
-	
 	points.push_back(Entity(Vector2f(-64, -64), p_pointTex));
 	powerBar.push_back(Entity(Vector2f(-64, -64), p_powerBG));
 	powerBar.push_back(Entity(Vector2f(-64, -64), p_powerFG));
@@ -39,7 +39,7 @@ void Ball::setWin(bool p_win)
 	win = p_win;
 }
 
-void Ball::update(double deltaTime, bool mouseDown, bool mousePressed, std::vector<Tile> tiles, Hole hole, Mix_Chunk* chargeSound, Mix_Chunk* swingSound, Mix_Chunk* holeSound)
+void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vector<Sand> sands ,std::vector<Tile> tiles, Hole hole, Mix_Chunk* chargeSound, Mix_Chunk* swingSound, Mix_Chunk* holeSound)
 {
 	if (win)
 	{
@@ -53,7 +53,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed, std::vect
 		setWin(true);
 	}
 	
-	if (mousePressed )
+	if (mousePressed)
 	{
 		Mix_PlayChannel(-1, chargeSound, 0);
 		playedSwingFx = false;
@@ -62,7 +62,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed, std::vect
 		SDL_GetMouseState(&mouseX, &mouseY);
 		setInitialMousePos(mouseX, mouseY);
 	}
-	if (mouseDown )
+	if (mouseDown)
 	{
 		int mouseX = 0;
 		int mouseY = 0;
@@ -162,6 +162,13 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed, std::vect
 			{
 				setVelocity(getVelocity().x, getVelocity().y * -1);
 				dirY *= -1;
+			}
+		}
+		for (Sand& s : sands)
+		{
+			if (getPos().x > s.getPos().x && getPos().x< s.getPos().x + 96 && getPos().y  > s.getPos().y && getPos().y < s.getPos().y + 96)
+			{
+				velocity1D = velocity1D / 1.025;
 			}
 		}
 	}

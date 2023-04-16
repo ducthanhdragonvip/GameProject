@@ -137,6 +137,7 @@
     <ClCompile Include="Hole.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="Sand.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClInclude Include="Hole.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="Sand.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

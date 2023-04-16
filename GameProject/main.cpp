@@ -12,6 +12,7 @@
 #include"Hole.h"
 #include"Tile.h"
 #include"Ball.h"
+#include"Sand.h"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ SDL_Texture* powerBg = window.loadTexture("gfx/powermeter_bg.png");
 SDL_Texture* powermeter = window.loadTexture("gfx/powermeter_overlay.png");
 SDL_Texture* tileTexture96 = window.loadTexture("gfx/tile96.png");
 SDL_Texture* tileTexture48 = window.loadTexture("gfx/tile48.png");
+SDL_Texture* sandTexture96 = window.loadTexture("gfx/sand.png");
 
 SDL_Color black = { 0, 0, 0 };
 
@@ -57,6 +59,29 @@ TTF_Font* font42 = TTF_OpenFont("font/font.ttf", 42);
 Ball ball = Ball(Vector2f(0, 0), ballTexture, pointTexture, powerFg, powerBg);
 Hole hole = Hole(Vector2f(0, 0), holeTexture);
 
+vector<Sand> loadSand(int level)
+{
+	vector<Sand> tmpS = {};
+	switch (level)
+	{
+	case 3:
+		tmpS.push_back(Sand(Vector2f(96, 48*5), sandTexture96));
+		tmpS.push_back(Sand(Vector2f(96 * 2, 48 * 5), sandTexture96));
+		tmpS.push_back(Sand(Vector2f(96 * 3, 48 * 5), sandTexture96));
+		tmpS.push_back(Sand(Vector2f(96, 48 * 7), sandTexture96));
+		tmpS.push_back(Sand(Vector2f(96 * 2, 48 * 7), sandTexture96));
+		tmpS.push_back(Sand(Vector2f(96 * 3, 48 * 7), sandTexture96));
+	
+		break;
+	case 4:
+		tmpS.push_back(Sand(Vector2f(96*2, 96 * 2), sandTexture96));
+		tmpS.push_back(Sand(Vector2f(96 * 2, 96 * 3), sandTexture96));
+		break;
+	}
+
+	return tmpS;
+}
+
 vector<Tile> loadTiles(int level)
 {
 	vector<Tile> tmp = {};
@@ -64,6 +89,7 @@ vector<Tile> loadTiles(int level)
 	{
 	case 0:
 		tmp.push_back(Tile(Vector2f(384, 288), tileTexture96));
+
 		break;
 	case 1:
 		tmp.push_back(Tile(Vector2f(240-96/2, 360-96/2), tileTexture96));
@@ -74,7 +100,16 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(96, 288), tileTexture96));
 		tmp.push_back(Tile(Vector2f(288, 288), tileTexture96));
 		break;
-	case 3:
+	case 4:
+		tmp.push_back(Tile(Vector2f(96, 96 * 2), tileTexture96));
+		tmp.push_back(Tile(Vector2f(96, 96 * 3), tileTexture96));
+		tmp.push_back(Tile(Vector2f(0, 96 * 3), tileTexture96));
+		tmp.push_back(Tile(Vector2f(96*3, 96 * 2), tileTexture96));
+		tmp.push_back(Tile(Vector2f(96*4, 96 * 3), tileTexture96));
+		tmp.push_back(Tile(Vector2f(96*3, 96 * 3), tileTexture96));
+
+		break;
+	case 5:
 		tmp.push_back(Tile(Vector2f(48,48*4), tileTexture48));
 		tmp.push_back(Tile(Vector2f(480-48*2, 48 * 4), tileTexture48));
 
@@ -84,7 +119,7 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(480-48*2,48*6), tileTexture96));
 		tmp.push_back(Tile(Vector2f(480-48*4, 48 * 8), tileTexture96));
 		break;
-	case 4:
+	case 6:
 		tmp.push_back(Tile(Vector2f(192, 48), tileTexture48));
 		tmp.push_back(Tile(Vector2f(192+48, 48), tileTexture48));
 		tmp.push_back(Tile(Vector2f(48*6, 48*2), tileTexture48));
@@ -102,7 +137,7 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(96, 96), tileTexture96));
 		tmp.push_back(Tile(Vector2f(96*2, 96*2), tileTexture96));
 		break;
-	case 5:
+	case 7:
 
 		tmp.push_back(Tile(Vector2f(96, 720 - 96 * 2), tileTexture96));
 		tmp.push_back(Tile(Vector2f(48 * 3, 720 - 96 * 3), tileTexture96));
@@ -132,6 +167,7 @@ vector<Tile> loadTiles(int level)
 int Stroke;
 int level = 0;
 vector<Tile> tiles = loadTiles(level);
+vector<Sand> sands = loadSand(level);
 
 int state = 0;// 0 title, 1 game,2 end
 
@@ -146,9 +182,10 @@ bool mousePressed = false;
 bool swingPlayed = false;
 bool secondSwingPlayed = false;
 
+
 void loadLevel(int level)
 {
-	if (level > 5)
+	if (level > 8)
 	{
 		state = 2;
 		return;
@@ -158,34 +195,45 @@ void loadLevel(int level)
 	ball.setWin(false);
 
 	tiles = loadTiles(level);
+	sands = loadSand(level);
 
 	switch (level)
 	{
 	case 0:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
-	break;
+		break;
 
 	case 1:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
-	break;
+		break;
 	case 2:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
-	break;
+		break;
 	case 3:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
-	break;
+		break;
 	case 4:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
-	break;
+		break;
 	case 5:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
+	break;
+	case 6:
+		hole.setPos(220, 129);
+		ball.setPos(228, 560);
+		break;
+	case 7:
+		hole.setPos(220, 129);
+		ball.setPos(228, 560);
+		break;
 	}
+
 }
 
 void update()
@@ -214,17 +262,21 @@ void update()
 				mouseDown = false;
 			}
 			break;
+		
 		}
+		
+	
 	}
 	if (state == 1)
 	{
-		ball.update(deltaTime, mouseDown, mousePressed, tiles, hole, chargeSound, swingSound, holeSound);
+		ball.update(deltaTime, mouseDown, mousePressed,sands ,tiles, hole, chargeSound, swingSound, holeSound);
 		
 		Stroke = ball.getStrokes();
 		if (ball.getScale().x == 0)
 		{
 			level++;
 			loadLevel(level);
+			loadSand(level);
 		}
 	}
 }
@@ -233,12 +285,18 @@ void graphics()
 {
 	window.clear();
 	window.render(0, 0, bgTexture);
-	window.render(hole);
+	
+	for (Sand& s : sands)
+	{
+		window.render(s);
+	}
 	for (Entity& e : ball.getPoints())
 	{
 		window.render(e);
 	}
+	window.render(hole);
 	window.render(ball);
+	
 	for (Tile& t : tiles)
 	{
 		window.render(t);
