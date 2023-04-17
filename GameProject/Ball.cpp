@@ -53,7 +53,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 		setWin(true);
 	}
 	
-	if (mousePressed)
+	if (mousePressed && canMove)
 	{
 		Mix_PlayChannel(-1, chargeSound, 0);
 		playedSwingFx = false;
@@ -62,7 +62,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 		SDL_GetMouseState(&mouseX, &mouseY);
 		setInitialMousePos(mouseX, mouseY);
 	}
-	if (mouseDown)
+	if (mouseDown && canMove)
 	{
 		int mouseX = 0;
 		int mouseY = 0;
@@ -100,6 +100,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 		points.at(0).setPos(-64, -64);
 		powerBar.at(0).setPos(-64, -64);
 		powerBar.at(1).setPos(-64, -64);
+		canMove = false;
 		setPos(getPos().x + getVelocity().x * deltaTime, getPos().y + getVelocity().y * deltaTime);
 		if (getVelocity().x > 0.001 || getVelocity().x < -0.001 || getVelocity().y > 0.001 || getVelocity().y < -0.001)
 		{
@@ -123,7 +124,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 			int mouseY = 0;
 			SDL_GetMouseState(&mouseX, &mouseY);
 			setInitialMousePos(mouseX, mouseY);
-		
+			canMove = true;
 		}
 
 		if (getPos().x + getCurrentFrame().w >480)

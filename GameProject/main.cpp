@@ -6,6 +6,7 @@
 #include<vector>
 #include<string>
 #include<cstring>
+#include<fstream>
 
 #include"RenderWindow.h"
 #include"Entity.h"
@@ -13,6 +14,7 @@
 #include"Tile.h"
 #include"Ball.h"
 #include"Sand.h"
+
 
 using namespace std;
 
@@ -166,6 +168,10 @@ vector<Tile> loadTiles(int level)
 
 int Stroke;
 int level = 0;
+
+int score;
+int bestScore;
+
 vector<Tile> tiles = loadTiles(level);
 vector<Sand> sands = loadSand(level);
 
@@ -247,6 +253,7 @@ void update()
 		switch (event.type)
 		{
 		case SDL_QUIT:
+			score = bestScore;
 			running = false;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -264,8 +271,6 @@ void update()
 			break;
 		
 		}
-		
-	
 	}
 	if (state == 1)
 	{
@@ -313,8 +318,11 @@ void graphics()
 		window.render(200, 10, "Hole :", font32, black);
 		window.render(280, 10, to_string(level).c_str(), font32, black);
 
-		window.render(180, 650, "Stroke :", font32, black);
-		window.render(280, 650, to_string(Stroke).c_str(), font32, black);
+		window.render(180, 630, "Stroke :", font32, black);
+		window.render(280, 630, to_string(Stroke).c_str(), font32, black);
+
+		window.render(136, 680, "High Score :", font32, black);
+		window.render(280, 680, to_string(bestScore).c_str(), font32, black);
 	}
 	else
 	{
@@ -323,6 +331,7 @@ void graphics()
 		window.render(40, 50, "YOU COMPLETED THE GAME!", font42, black);
 		window.render(110, 360, "YOUR STROKE :", font42, black);
 		window.render(350, 360, to_string(Stroke).c_str(), font42, black);
+		score = Stroke;
 	}
 
 	window.display();
@@ -344,6 +353,7 @@ void titleScreen()
 			switch (event.type)
 			{
 			case SDL_QUIT:
+				score = bestScore;
 				running = false;
 				break;
 			}
@@ -387,11 +397,25 @@ void titleScreen()
 
 }
 
+void saveHighScore()
+{
+	ofstream output("High_Score.txt");
+	if (score < bestScore)
+	{
+		output << score;
+	}
+	else {
+		output << bestScore;
+	}
+}
+
 int main(int argc, char* agrv[])
 {
-
 	loadLevel(level);
-	
+
+	ifstream input("High_Score.txt");
+	input >> bestScore;
+
 	while (running)
 	{
 		if (state == 0)
@@ -404,6 +428,7 @@ int main(int argc, char* agrv[])
 			graphics();
 		}
 	}
+	saveHighScore();
 	window.cleanup();
 	TTF_CloseFont(font32);
 	TTF_CloseFont(font42);

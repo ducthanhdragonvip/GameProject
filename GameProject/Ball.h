@@ -55,5 +55,6 @@ private:
 	int dirY = 1;
 	bool playedSwingFx = true;
 	bool win = false;
+	bool canMove = true;
 };
 
