@@ -7,6 +7,7 @@
 #include "Hole.h"
 #include "Tile.h"
 #include "Sand.h"
+#include "Water.h"
 #include "Entity.h"
 #include "Math.h"
 class Ball : public Entity
@@ -41,7 +42,7 @@ public:
 	void setInitialMousePos(float x, float y);
 	void setVelocity(float x, float y);
 	void setLaunchedVelocity(float x, float y);
-	void update(double deltaTime, bool mouseDown, bool mousePressed, std::vector<Sand> sands,std::vector<Tile> tiles, Hole hole, Mix_Chunk* chargeSfx, Mix_Chunk* swingSfx, Mix_Chunk* holeSfx);
+	void update(double deltaTime, bool mouseDown, bool mousePressed, std::vector<Sand> sands,std::vector<Tile> tiles,std::vector<Water> water ,Hole hole, Mix_Chunk* chargeSfx, Mix_Chunk* swingSfx, Mix_Chunk* holeSfx);
 private:
 	Vector2f velocity;
 	Vector2f initialMousePos;
@@ -56,5 +57,7 @@ private:
 	bool playedSwingFx = true;
 	bool win = false;
 	bool canMove = true;
+	float lastPosx;
+	float lastPosy;
 };
 

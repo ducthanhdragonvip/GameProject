@@ -139,6 +139,7 @@
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Sand.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Sand.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

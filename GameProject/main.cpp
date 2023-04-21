@@ -14,6 +14,7 @@
 #include"Tile.h"
 #include"Ball.h"
 #include"Sand.h"
+#include"Water.h"
 
 
 using namespace std;
@@ -47,6 +48,8 @@ SDL_Texture* powermeter = window.loadTexture("gfx/powermeter_overlay.png");
 SDL_Texture* tileTexture96 = window.loadTexture("gfx/tile96.png");
 SDL_Texture* tileTexture48 = window.loadTexture("gfx/tile48.png");
 SDL_Texture* sandTexture96 = window.loadTexture("gfx/sand.png");
+SDL_Texture* waterTexture96 = window.loadTexture("gfx/water.png");
+SDL_Texture* logoTexure = window.loadTexture("gfx/logo.png");
 
 SDL_Color black = { 0, 0, 0 };
 
@@ -75,13 +78,26 @@ vector<Sand> loadSand(int level)
 		tmpS.push_back(Sand(Vector2f(96 * 3, 48 * 7), sandTexture96));
 	
 		break;
-	case 4:
+	case 5:
 		tmpS.push_back(Sand(Vector2f(96*2, 96 * 2), sandTexture96));
 		tmpS.push_back(Sand(Vector2f(96 * 2, 96 * 3), sandTexture96));
 		break;
 	}
 
 	return tmpS;
+}
+
+vector<Water> loadWater(int level)
+{
+	vector<Water> tmpW = {};
+	switch (level)
+	{
+	case 4:
+		tmpW.push_back(Water(Vector2f(96+48, 48 * 5), waterTexture96));
+		tmpW.push_back(Water(Vector2f(96 * 2 + 48, 48 * 5), waterTexture96));
+		break;
+	}
+	return tmpW;
 }
 
 vector<Tile> loadTiles(int level)
@@ -103,6 +119,17 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(288, 288), tileTexture96));
 		break;
 	case 4:
+		tmp.push_back(Tile(Vector2f(96 , 48 * 5), tileTexture48));
+		tmp.push_back(Tile(Vector2f(96 , 48 * 6), tileTexture48));
+		tmp.push_back(Tile(Vector2f(96+48 , 48 * 4), tileTexture48));
+		tmp.push_back(Tile(Vector2f(96 + 48*2, 48 * 4), tileTexture48));
+		tmp.push_back(Tile(Vector2f(96 + 48*3, 48 * 4), tileTexture48));
+		tmp.push_back(Tile(Vector2f(96 + 48 *4, 48 * 4), tileTexture48));
+		tmp.push_back(Tile(Vector2f(48 * 7, 48 * 5), tileTexture48));
+		tmp.push_back(Tile(Vector2f(48 * 7, 48 * 6), tileTexture48));
+		break;
+
+	case 5:
 		tmp.push_back(Tile(Vector2f(96, 96 * 2), tileTexture96));
 		tmp.push_back(Tile(Vector2f(96, 96 * 3), tileTexture96));
 		tmp.push_back(Tile(Vector2f(0, 96 * 3), tileTexture96));
@@ -111,7 +138,7 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(96*3, 96 * 3), tileTexture96));
 
 		break;
-	case 5:
+	case 6:
 		tmp.push_back(Tile(Vector2f(48,48*4), tileTexture48));
 		tmp.push_back(Tile(Vector2f(480-48*2, 48 * 4), tileTexture48));
 
@@ -121,7 +148,7 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(480-48*2,48*6), tileTexture96));
 		tmp.push_back(Tile(Vector2f(480-48*4, 48 * 8), tileTexture96));
 		break;
-	case 6:
+	case 7:
 		tmp.push_back(Tile(Vector2f(192, 48), tileTexture48));
 		tmp.push_back(Tile(Vector2f(192+48, 48), tileTexture48));
 		tmp.push_back(Tile(Vector2f(48*6, 48*2), tileTexture48));
@@ -139,7 +166,7 @@ vector<Tile> loadTiles(int level)
 		tmp.push_back(Tile(Vector2f(96, 96), tileTexture96));
 		tmp.push_back(Tile(Vector2f(96*2, 96*2), tileTexture96));
 		break;
-	case 7:
+	case 8:
 
 		tmp.push_back(Tile(Vector2f(96, 720 - 96 * 2), tileTexture96));
 		tmp.push_back(Tile(Vector2f(48 * 3, 720 - 96 * 3), tileTexture96));
@@ -174,6 +201,7 @@ int bestScore;
 
 vector<Tile> tiles = loadTiles(level);
 vector<Sand> sands = loadSand(level);
+vector<Water> water = loadWater(level);
 
 int state = 0;// 0 title, 1 game,2 end
 
@@ -202,6 +230,7 @@ void loadLevel(int level)
 
 	tiles = loadTiles(level);
 	sands = loadSand(level);
+	water = loadWater(level);
 
 	switch (level)
 	{
@@ -235,6 +264,10 @@ void loadLevel(int level)
 		ball.setPos(228, 560);
 		break;
 	case 7:
+		hole.setPos(220, 129);
+		ball.setPos(228, 560);
+		break;
+	case 8:
 		hole.setPos(220, 129);
 		ball.setPos(228, 560);
 		break;
@@ -274,7 +307,7 @@ void update()
 	}
 	if (state == 1)
 	{
-		ball.update(deltaTime, mouseDown, mousePressed,sands ,tiles, hole, chargeSound, swingSound, holeSound);
+		ball.update(deltaTime, mouseDown, mousePressed,sands ,tiles,water ,hole, chargeSound, swingSound, holeSound);
 		
 		Stroke = ball.getStrokes();
 		if (ball.getScale().x == 0)
@@ -282,6 +315,7 @@ void update()
 			level++;
 			loadLevel(level);
 			loadSand(level);
+			loadWater(level);
 		}
 	}
 }
@@ -294,6 +328,10 @@ void graphics()
 	for (Sand& s : sands)
 	{
 		window.render(s);
+	}
+	for (Water& w : water)
+	{
+		window.render(w);
 	}
 	for (Entity& e : ball.getPoints())
 	{
@@ -316,7 +354,7 @@ void graphics()
 	if (state != 2)
 	{
 		window.render(200, 10, "Hole :", font32, black);
-		window.render(280, 10, to_string(level).c_str(), font32, black);
+		window.render(280, 10, to_string(level+1).c_str(), font32, black);
 
 		window.render(180, 630, "Stroke :", font32, black);
 		window.render(280, 630, to_string(Stroke).c_str(), font32, black);
@@ -329,9 +367,20 @@ void graphics()
 		window.clear();
 		window.render(0, 0, bgTexture);
 		window.render(40, 50, "YOU COMPLETED THE GAME!", font42, black);
-		window.render(110, 360, "YOUR STROKE :", font42, black);
-		window.render(350, 360, to_string(Stroke).c_str(), font42, black);
-		score = Stroke;
+		if (Stroke > bestScore)
+		{
+			window.render(110, 360, "YOUR STROKE :", font42, black);
+			window.render(350, 360, to_string(Stroke).c_str(), font42, black);
+			score = Stroke;
+		}
+		else
+		{
+			window.render(55, 240, "Congratulation,you beat", font42, black);
+			window.render(90, 290, "the highest score", font42, black);
+			window.render(110, 380, "YOUR STROKE :", font42, black);
+			window.render(350, 380, to_string(Stroke).c_str(), font42, black);
+			score = Stroke;
+		}
 	}
 
 	window.display();
@@ -391,6 +440,7 @@ void titleScreen()
 		}
 		window.clear();
 		window.render(0, 0, bgTexture);
+		window.render(50, 250, logoTexure);
 		window.render(125, 575, "LEFT CLICK TO START", font32, black);
 		window.display();
 	}

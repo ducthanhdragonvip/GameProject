@@ -4,9 +4,11 @@
 #include "Tile.h"
 #include "Hole.h"
 #include "Sand.h"
+#include "Water.h"
 #include<iostream>
 #include<SDL_mixer.h>
 #include<SDL_ttf.h>
+#include<windows.h>   
 
 Ball::Ball(Vector2f p_pos, SDL_Texture* p_tex, SDL_Texture* p_pointTex, SDL_Texture* p_powerFG, SDL_Texture* p_powerBG)
 :Entity(p_pos, p_tex)
@@ -39,8 +41,9 @@ void Ball::setWin(bool p_win)
 	win = p_win;
 }
 
-void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vector<Sand> sands ,std::vector<Tile> tiles, Hole hole, Mix_Chunk* chargeSound, Mix_Chunk* swingSound, Mix_Chunk* holeSound)
-{
+void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vector<Sand> sands ,std::vector<Tile> tiles,std::vector<Water> water ,Hole hole, Mix_Chunk* chargeSound, Mix_Chunk* swingSound, Mix_Chunk* holeSound)
+{	
+
 	if (win)
 	{
 		setScale(0,0 );
@@ -61,6 +64,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 		int mouseY = 0;
 		SDL_GetMouseState(&mouseX, &mouseY);
 		setInitialMousePos(mouseX, mouseY);
+		
 	}
 	if (mouseDown && canMove)
 	{
@@ -80,6 +84,9 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 
 		powerBar.at(0).setPos(getPos().x + 60, getPos().y - 48);
 		powerBar.at(1).setPos(getPos().x + 66, getPos().y +6 - 48 * powerBar.at(1).getScale().y);
+
+		lastPosx = getPos().x;
+		lastPosy = getPos().y;
 
 		if (velocity1D > 1)
 		{
@@ -112,6 +119,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 			else
 			{
 				velocity1D = 0;
+
 			}
 			velocity.x = (velocity1D / launchedVelocity1D) * abs(launchedVelocity.x) * dirX;
 			velocity.y = (velocity1D / launchedVelocity1D) * abs(launchedVelocity.y) * dirY;
@@ -125,6 +133,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 			SDL_GetMouseState(&mouseX, &mouseY);
 			setInitialMousePos(mouseX, mouseY);
 			canMove = true;
+			
 		}
 
 		if (getPos().x + getCurrentFrame().w >480)
@@ -172,6 +181,17 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 				velocity1D = velocity1D / 1.025;
 			}
 		}
+
+		for (Water& w : water)
+		{
+			if (getPos().x > w.getPos().x && getPos().x< w.getPos().x + 96 && getPos().y  > w.getPos().y && getPos().y < w.getPos().y + 96)
+			{
+				setPos(lastPosx, lastPosy);
+				velocity1D = 0;
+				
+			}
+		}
+		
 	}
 
 }
