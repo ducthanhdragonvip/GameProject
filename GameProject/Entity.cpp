@@ -5,8 +5,8 @@ Entity::Entity(Vector2f p_pos, SDL_Texture* p_tex)
 {
 	currentFrame.x = 0;
 	currentFrame.y = 0;
-	currentFrame.w = 32;
-	currentFrame.h = 32;
+	currentFrame.w = 48;
+	currentFrame.h = 48;
 	SDL_QueryTexture(p_tex, NULL, NULL, &currentFrame.w, &currentFrame.h);
 }
 

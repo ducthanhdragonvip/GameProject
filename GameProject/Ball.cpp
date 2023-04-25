@@ -42,8 +42,8 @@ void Ball::setWin(bool p_win)
 }
 
 void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vector<Sand> sands ,std::vector<Tile> tiles,std::vector<Water> water ,Hole hole, Mix_Chunk* chargeSound, Mix_Chunk* swingSound, Mix_Chunk* holeSound)
-{	
-
+{
+	
 	if (win)
 	{
 		setScale(0,0 );
@@ -85,8 +85,8 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 		powerBar.at(0).setPos(getPos().x + 60, getPos().y - 48);
 		powerBar.at(1).setPos(getPos().x + 66, getPos().y +6 - 48 * powerBar.at(1).getScale().y);
 
-		lastPosx = getPos().x;
-		lastPosy = getPos().y;
+		lastPos.x = getPos().x;
+		lastPos.y = getPos().y;
 
 		if (velocity1D > 1)
 		{
@@ -121,6 +121,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 				velocity1D = 0;
 
 			}
+	
 			velocity.x = (velocity1D / launchedVelocity1D) * abs(launchedVelocity.x) * dirX;
 			velocity.y = (velocity1D / launchedVelocity1D) * abs(launchedVelocity.y) * dirY;
 		}
@@ -160,7 +161,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 		{
 			float newX = getPos().x + getVelocity().x * deltaTime;
 			float newY = getPos().y;
-			if (newX + 16 > t.getPos().x && newX < t.getPos().x + t.getCurrentFrame().w && newY + 16 > t.getPos().y && newY < t.getPos().y + t.getCurrentFrame().h )
+			if (newX + 24 > t.getPos().x && newX < t.getPos().x + t.getCurrentFrame().w && newY + 24 > t.getPos().y && newY < t.getPos().y + t.getCurrentFrame().h )
 			{
 				setVelocity(getVelocity().x * -1, getVelocity().y);
 				dirX *= -1;
@@ -168,7 +169,7 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 
 			newX = getPos().x;
 			newY = getPos().y + getVelocity().y * deltaTime;
-			if (newX + 16 > t.getPos().x && newX < t.getPos().x + t.getCurrentFrame().w && newY + 16 > t.getPos().y && newY < t.getPos().y + t.getCurrentFrame().h )
+			if (newX + 24 > t.getPos().x && newX < t.getPos().x + t.getCurrentFrame().w && newY + 24 > t.getPos().y && newY < t.getPos().y + t.getCurrentFrame().h )
 			{
 				setVelocity(getVelocity().x, getVelocity().y * -1);
 				dirY *= -1;
@@ -184,9 +185,9 @@ void Ball::update(double deltaTime, bool mouseDown, bool mousePressed,std::vecto
 
 		for (Water& w : water)
 		{
-			if (getPos().x > w.getPos().x && getPos().x< w.getPos().x + 96 && getPos().y  > w.getPos().y && getPos().y < w.getPos().y + 96)
+			if (getPos().x > w.getPos().x && getPos().x< w.getPos().x + 80 && getPos().y  > w.getPos().y && getPos().y < w.getPos().y + 80)
 			{
-				setPos(lastPosx, lastPosy);
+				setPos(lastPos.x, lastPos.y);
 				velocity1D = 0;
 				
 			}

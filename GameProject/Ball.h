@@ -47,6 +47,7 @@ private:
 	Vector2f velocity;
 	Vector2f initialMousePos;
 	Vector2f launchedVelocity;
+	Vector2f lastPos;
 	float velocity1D;
 	float launchedVelocity1D;
 	std::vector<Entity> points;
@@ -57,7 +58,6 @@ private:
 	bool playedSwingFx = true;
 	bool win = false;
 	bool canMove = true;
-	float lastPosx;
-	float lastPosy;
+	
 };
 

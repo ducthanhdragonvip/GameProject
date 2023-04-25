@@ -23,7 +23,6 @@ public:
 	void setScale(float w, float h);
 	void setAngle(float angle);
 	SDL_Texture* getTex();
-	void update(double deltaTime);
 	SDL_Rect getCurrentFrame();
 
 private:
